@@ -55,7 +55,7 @@ public:
 		glEnable(GL_DEPTH_TEST);
 		glBindVertexArray(VAO);
 		//glDrawElements(GL_TRIANGLES, indices.size() * sizeof(glm::uvec3), GL_UNSIGNED_INT, 0);
-		glDrawArrays(GL_TRIANGLES, 0, indices.size());
+		glDrawArrays(GL_TRIANGLES, 0, triangles.size() * 3);
 	}
 
 	void loadObj() {
@@ -70,26 +70,27 @@ public:
 		int test = sizeof(object.attributes.vertices);
 		for (int i = 0; i <= object.attributes.vertices.size() - 3; i += 3) {
 			auto& vertexDataObj = object.attributes.vertices;
-			vertices.push_back(glm::vec3(vertexDataObj[i], vertexDataObj[i+1], vertexDataObj[i+2]));
+			vertices.emplace_back(vertexDataObj[i], vertexDataObj[i+1], vertexDataObj[i+2]);
 			
 		}
 
 		for (int i = 0; i <= object.attributes.texcoords.size() - 2; i += 2) {
 			auto& vertexDataObj = object.attributes.texcoords;
-			uvs.push_back(glm::vec2(vertexDataObj[i], vertexDataObj[i + 1]));
+			uvs.emplace_back(vertexDataObj[i], vertexDataObj[i + 1]);
 
 		}
 		for (int i = 0; i <= object.attributes.normals.size() - 3; i += 3) {
 			auto& vertexDataObj = object.attributes.normals;
-			normals.push_back(glm::vec3(vertexDataObj[i], vertexDataObj[i + 1], vertexDataObj[i + 2]));
+			normals.emplace_back(vertexDataObj[i], vertexDataObj[i + 1], vertexDataObj[i + 2]);
 		
 		}
 
 		auto& shapeDataObj = object.shapes.at(0).mesh.indices;
 		auto tester  = object.shapes.at(0).mesh.num_face_vertices.at(0);
 		for (int i = 0; i <= shapeDataObj.size() - 3; i += 3) {
-			indices.push_back(glm::uvec3(shapeDataObj[i].vertex_index, shapeDataObj[i + 1].vertex_index, shapeDataObj[i + 2].vertex_index));
-			normalIndices.push_back(glm::uvec3(shapeDataObj[i].normal_index, shapeDataObj[i + 1].normal_index, shapeDataObj[i + 2].normal_index));
+			indices.emplace_back(shapeDataObj[i].vertex_index, shapeDataObj[i + 1].vertex_index, shapeDataObj[i + 2].vertex_index);
+
+            normalIndices.emplace_back(shapeDataObj[i].normal_index, shapeDataObj[i + 1].normal_index, shapeDataObj[i + 2].normal_index);
 			Triangle triangle; 
 			triangle.vertices[0] = vertices.at(shapeDataObj[i].vertex_index);
 			triangle.vertices[1] = vertices.at(shapeDataObj[i + 1].vertex_index);
@@ -114,19 +115,40 @@ public:
 		glGenBuffers(1, &NBO);
 
 		glBindVertexArray(VAO);
-		for (int i = 0; i < vertices.size(); i++) {
-			drawData.push_back(vertices[i].x);
-			drawData.push_back(vertices[i].y);
-			drawData.push_back(vertices[i].z);
-			drawData.push_back(uvs[i].x);
-			drawData.push_back(uvs[i].y);
-		}
+		for (int i = 0; i < triangles.size(); i++) {
+			drawData.push_back(triangles[i].vertices[0].x);
+            drawData.push_back(triangles[i].vertices[0].y);
+            drawData.push_back(triangles[i].vertices[0].z);
+            drawData.push_back(triangles[i].normals[0].x);
+            drawData.push_back(triangles[i].normals[0].y);
+            drawData.push_back(triangles[i].normals[0].z);
+            drawData.push_back(triangles[i].uvs[0].x);
+            drawData.push_back(triangles[i].uvs[0].y);
+            drawData.push_back(triangles[i].vertices[1].x);
+            drawData.push_back(triangles[i].vertices[1].y);
+            drawData.push_back(triangles[i].vertices[1].z);
+            drawData.push_back(triangles[i].normals[1].x);
+            drawData.push_back(triangles[i].normals[1].y);
+            drawData.push_back(triangles[i].normals[1].z);
+            drawData.push_back(triangles[i].uvs[1].x);
+            drawData.push_back(triangles[i].uvs[1].y);
+            drawData.push_back(triangles[i].vertices[2].x);
+            drawData.push_back(triangles[i].vertices[2].y);
+            drawData.push_back(triangles[i].vertices[2].z);
+            drawData.push_back(triangles[i].normals[2].x);
+            drawData.push_back(triangles[i].normals[2].y);
+            drawData.push_back(triangles[i].normals[2].z);
+            drawData.push_back(triangles[i].uvs[2].x);
+            drawData.push_back(triangles[i].uvs[2].y);
+        }
+
+
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, triangles.size() * sizeof(Triangle), (void*)&triangles.front(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, drawData.size() * sizeof(float ), (void*)&drawData.front(), GL_STATIC_DRAW);
 
 
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(glm::uvec3), (void*)&indices.front(), GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(glm::uvec3), (void*)&indices.front(), GL_STATIC_DRAW);
 
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);

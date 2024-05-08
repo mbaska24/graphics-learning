@@ -1,7 +1,7 @@
 #version 460 core
 layout(location = 0) in vec3 pos;
-layout(location = 1) in vec3 vertexNormal;
-layout(location = 2) in vec2 st;
+layout(location = 1) in vec2 vertexNormal;
+//layout(location = 2) in vec2 st;
 
 out vec4 color;
 
