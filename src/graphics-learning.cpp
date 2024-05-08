@@ -63,11 +63,11 @@ int main() {
 	}
 
 
-	Cube test = Cube();
+	TriangularPrism test = TriangularPrism();
 	Sphere sphere = Sphere();
 	Light cube = Light();
-	Shader shader("C:\\Users\\baska\\source\\repos\\Lighting\\Lighting\\cubeshader.vert", "C:\\Users\\baska\\source\\repos\\Lighting\\Lighting\\cubeshader.frag");
-	Shader lightShader("C:\\Users\\baska\\source\\repos\\Lighting\\Lighting\\lightshader.vert", "C:\\Users\\baska\\source\\repos\\Lighting\\Lighting\\lightshader.frag");
+	Shader shader("..\\shaders\\cubeshader.vert", "..\\shaders\\cubeshader.frag");
+	Shader lightShader("..\\shaders\\lightshader.vert", "..\\shaders\\lightshader.frag");
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	camera = Camera(vec3(0, 0, 4), vec3(0, 0, 0));
@@ -118,6 +118,7 @@ int main() {
 
 		mat4 mvp = projection * view * model;
 		shader.setMatrix("MVP", (float*)&mvp);
+        shader.setMatrix("model", (float*) &model);
 
 		test.drawPrimitive();
 
@@ -127,7 +128,7 @@ int main() {
 		modelSphere = transformationMatrix * modelSphere;
 		mat4 mvpSphere = projection * view * modelSphere;
 		shader.setMatrix("MVP", (float*)&mvpSphere);
-
+        shader.setMatrix("model", (float*) &modelSphere);
 		sphere.drawPrimitive();
 
 		lightShader.use();

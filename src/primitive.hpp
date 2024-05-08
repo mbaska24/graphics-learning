@@ -102,7 +102,7 @@ public:
 			triangle.uvs[1] = uvs.at(shapeDataObj[i+1].texcoord_index);
 			triangle.uvs[2] = uvs.at(shapeDataObj[i+2].texcoord_index);
 
-			triangles.push_back(triangle);
+			triangles.emplace_back(triangle);
 		}
 
 	}
