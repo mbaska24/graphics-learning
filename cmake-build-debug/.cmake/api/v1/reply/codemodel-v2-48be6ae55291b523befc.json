@@ -1,0 +1,243 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						5
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "include/glad",
+					"jsonFile" : "directory-include.glad-Debug-90ced24e9b0772f9ff1f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "include/glad",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "include/GLFW",
+					"childIndexes" : 
+					[
+						3,
+						4
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-include.GLFW-Debug-b0e463aa1f5458a3c218.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "include/GLFW",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "include/GLFW/src",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-include.GLFW.src-Debug-ecdbef797d4c2cdb169d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 2,
+					"source" : "include/GLFW/src",
+					"targetIndexes" : 
+					[
+						1,
+						5
+					]
+				},
+				{
+					"build" : "include/GLFW/docs",
+					"jsonFile" : "directory-include.GLFW.docs-Debug-a33e65b771f63dfd595d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 2,
+					"source" : "include/GLFW/docs"
+				},
+				{
+					"build" : "include/glm",
+					"childIndexes" : 
+					[
+						6
+					],
+					"jsonFile" : "directory-include.glm-Debug-c4c27c926a080224ef89.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.6"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 3,
+					"source" : "include/glm"
+				},
+				{
+					"build" : "include/glm/glm",
+					"jsonFile" : "directory-include.glm.glm-Debug-36b3f26e4db7da58bc8b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.6"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 3,
+					"source" : "include/glm/glm",
+					"targetIndexes" : 
+					[
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "graphics-learning",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "Glad",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2,
+						3,
+						4
+					],
+					"name" : "GLFW",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						4,
+						5
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5,
+						6
+					],
+					"name" : "glm",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "glad::@2dd0ebcba49cfb86a064",
+					"jsonFile" : "target-glad-Debug-8216ed517c9a81452de7.json",
+					"name" : "glad",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "glfw::@87696e105d3e5fcbb1e0",
+					"jsonFile" : "target-glfw-Debug-1eb2d6bd4ee0df497b0b.json",
+					"name" : "glfw",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "glm::@f333b854a52c10d65a86",
+					"jsonFile" : "target-glm-Debug-6071ab8e2e2eec60bdf7.json",
+					"name" : "glm",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "graphics-learning::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-graphics-learning-Debug-d314a27bdce178153a7d.json",
+					"name" : "graphics-learning",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "uninstall::@7c3d02aaa70d581cf171",
+					"jsonFile" : "target-uninstall-Debug-bad07dc23f51ad6b89b1.json",
+					"name" : "uninstall",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "update_mappings::@87696e105d3e5fcbb1e0",
+					"jsonFile" : "target-update_mappings-Debug-7778263953fcc2133730.json",
+					"name" : "update_mappings",
+					"projectIndex" : 2
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/baska/source/repos/graphics-learning/cmake-build-debug",
+		"source" : "C:/Users/baska/source/repos/graphics-learning"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

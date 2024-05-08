@@ -12,7 +12,19 @@ endif()
 project ("graphics-learning")
 
 # Add source to this project's executable.
-add_executable (graphics-learning "graphics-learning.cpp" "graphics-learning.h")
+file(GLOB UTIL_FILES "util/*.h")
+file(GLOB SOURCE_FILES "src/*.cpp")
+file(GLOB HEADER_FILES "src/*.h" "src/*.hpp")
+add_executable (graphics-learning "src/graphics-learning.cpp" "src/graphics-learning.h" ${UTIL_FILES} ${SOURCE_FILES} ${HEADER_FILES})
+
+add_subdirectory(include/glad)
+target_link_libraries(graphics-learning glad)
+
+add_subdirectory(include/glfw)
+target_link_libraries(graphics-learning glfw)
+
+add_subdirectory(include/glm)
+target_link_libraries(graphics-learning glm)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET graphics-learning PROPERTY CXX_STANDARD 20)
