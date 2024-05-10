@@ -44,7 +44,7 @@ public:
 	unsigned int VBO, VAO, EBO;
 
 	char path[100];
-	const char* objectFile = "C:\\Users\\baska\\source\\repos\\Lighting\\Lighting\\";
+	const char* objectFile = "..\\assets\\";
 	const char* indirect;
 	
 	//std::vector<glm::vec2> textureCoords;

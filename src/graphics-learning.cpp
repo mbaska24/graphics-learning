@@ -63,7 +63,7 @@ int main() {
 	}
 
 
-	TriangularPrism test = TriangularPrism();
+	Sphere test = Sphere();
 	Sphere sphere = Sphere();
 	Light cube = Light();
 	Shader shader("..\\shaders\\cubeshader.vert", "..\\shaders\\cubeshader.frag");
@@ -76,6 +76,7 @@ int main() {
 	{
 
 		shader.use();
+        shader.setColor("viewPos", camera.cameraOrigin.x, camera.cameraOrigin.y, camera.cameraOrigin.z, 1.0f);
 		shader.setColor("lightPosition", cube.lightPosition.x, cube.lightPosition.y, cube.lightPosition.z, 1.0f);
 		shader.setColor("lightColor", cube.lightColor.x, cube.lightColor.y, cube.lightColor.z, 1.0f);
 		//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -86,8 +87,7 @@ int main() {
 
 		glm::mat4 model = glm::mat4(1.f);
 		model = glm::translate(model, vec3(0, 0, 0));
-		glm::mat4 modelSphere = glm::mat4(0.5);
-		modelSphere = glm::translate(modelSphere, vec3(3, 2, 0));
+
 		//model = glm::rotate(model, radians(-55.0f), vec3(1, 0, 0));
 		float deltaTime = 0.f;
 		float lastFrame = 0.f;
@@ -123,9 +123,11 @@ int main() {
 		test.drawPrimitive();
 
 		float transformation = sin(timeValue) / 2.0f + 0.5f;
-		float transformationAngle = fmod(timeValue, 360.f) * glm::pi<float>() / 0.75f;
-		mat4x4 transformationMatrix = glm::rotate(-transformationAngle, glm::vec3(1, 1, 1));
-		modelSphere = transformationMatrix * modelSphere;
+		float transformationAngle = fmod(timeValue, 360.f) * glm::pi<float>() / 5.f;
+		mat4x4 transformationMatrix = glm::rotate(-transformationAngle, glm::vec3(1, 0, 0));
+        glm::mat4 modelSphere = glm::mat4(0.5);
+        modelSphere = transformationMatrix * modelSphere;
+        modelSphere = glm::translate(modelSphere, vec3(3, 2, 0));
 		mat4 mvpSphere = projection * view * modelSphere;
 		shader.setMatrix("MVP", (float*)&mvpSphere);
         shader.setMatrix("model", (float*) &modelSphere);
