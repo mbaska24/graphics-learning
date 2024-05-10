@@ -20,5 +20,5 @@ worldPos = vec3(model * pos4);
 gl_Position = pos4;
 float distance = distance(pos4,lightPosition);
 //color = (lightColor / distance) * vec4(pos, 1.0f);
-normal = vertexNormal;
+normal = mat3(transpose(inverse(model))) * vertexNormal;
 }
