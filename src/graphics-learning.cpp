@@ -63,7 +63,7 @@ int main() {
 	}
 
 
-	Sphere test = Sphere();
+	Torus test = Torus();
 	Sphere sphere = Sphere();
 	Light cube = Light();
 	Shader shader("..\\shaders\\cubeshader.vert", "..\\shaders\\cubeshader.frag");

@@ -188,4 +188,9 @@ class Line : public Primitive {
 public: 
 	Line();
 };
+
+class Torus : public Primitive {
+public:
+    Torus();
+};
 #endif

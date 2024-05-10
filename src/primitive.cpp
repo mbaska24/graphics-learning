@@ -28,3 +28,8 @@ Line::Line() {
 	loadGpu();
 }
 
+Torus::Torus() {
+    indirect = "torus.obj";
+    loadObj();
+    loadGpu();
+}
