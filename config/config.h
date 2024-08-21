@@ -3,6 +3,6 @@
 
 #include <string>
 
-constexpr char workingDir[] = "C:\\Users\\baska\\source\\repos\\graphics-learning\\";
+constexpr char workingDir[] = "/Users/melisademirhan/Downloads/mert_folder/graphics-learning";
 
 #endif
