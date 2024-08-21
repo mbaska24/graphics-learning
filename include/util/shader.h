@@ -32,10 +32,17 @@ public:
 
         try {
             cout << workingDir << endl;
+#ifdef _WIN32
             strcpy_s(vertexPath, workingDir);
             strcat_s(vertexPath, indirect_v);
             strcpy_s(fragmentPath, workingDir);
             strcat_s(fragmentPath, indirect_f);
+#elif __APPLE__
+			strcpy(vertexPath, workingDir);
+            strcat(vertexPath, indirect_v);
+            strcpy(fragmentPath, workingDir);
+            strcat(fragmentPath, indirect_f);
+#endif
             vShaderFile.open(vertexPath);
             fShaderFile.open(fragmentPath);
             stringstream vstream, fstream;

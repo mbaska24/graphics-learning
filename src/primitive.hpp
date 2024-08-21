@@ -43,7 +43,11 @@ public:
 	unsigned int VBO, VAO, EBO;
 
 	char path[100];
+	#ifdef _WIN32
 	const char* objectFile = "\\assets\\";
+	#elif __APPLE__
+	const char* objectFile = "/assets/";
+	#endif
 	const char* indirect;
 	
 	//std::vector<glm::vec2> textureCoords;
@@ -59,9 +63,15 @@ public:
 
 	void loadObj() {
 		std::string error;
+	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
         strcpy_s(path, workingDir);
 		strcat_s(path, objectFile);
 		strcat_s(path, indirect);
+	#elif __APPLE__
+		strcpy(path, workingDir);
+		strcat(path, objectFile);
+		strcat(path, indirect);
+	#endif
 		bool success = LoadObj(&object.attributes, &object.shapes, &object.materials, &error, path);
 		if (!success) {
 			std::cout << "ERROR OBJ LOADING: " << error << std::endl;

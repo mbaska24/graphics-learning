@@ -44,8 +44,11 @@ int height = 600;
 int main() {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	#endif
 
 
 	GLFWwindow* window = glfwCreateWindow(width, height, "ChildishDev", NULL, NULL);
@@ -69,9 +72,15 @@ int main() {
 	Light cube = Light();
 	Sphere sphere2 = Sphere();
 
+	#ifdef _WIN32
 	Shader shader("\\shaders\\cubeshader.vert", "\\shaders\\cubeshader.frag");
 	Shader lightShader("\\shaders\\lightshader.vert", "\\shaders\\lightshader.frag");
     Shader outlineShader("\\shaders\\cubeshader.vert", "\\shaders\\outlineshader.frag");
+	#elif __APPLE__
+	Shader shader("/shaders/cubeshader.vert", "/shaders/cubeshader.frag");
+	Shader lightShader("/shaders/lightshader.vert", "/shaders/lightshader.frag");
+    Shader outlineShader("/shaders/cubeshader.vert", "/shaders/outlineshader.frag");
+	#endif
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	camera = Camera(vec3(0, 0, 4), vec3(0, 0, 0));
