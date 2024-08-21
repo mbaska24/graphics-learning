@@ -75,7 +75,7 @@ StyleCopReport.xml
 *_h.h
 *.ilk
 *.meta
-*.obj
+cmake-build-debug\
 *.iobj
 *.pch
 *.pdb
