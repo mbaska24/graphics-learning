@@ -14,6 +14,7 @@
 #include <../util/stb_image.h>
 #include <../glm/glm/glm.hpp>
 
+
 using namespace glm;
 using namespace std;
 
@@ -63,15 +64,19 @@ int main() {
 	}
 
 
-	Torus test = Torus();
+	Cube test = Cube();
 	Sphere sphere = Sphere();
 	Light cube = Light();
-	Shader shader("..\\shaders\\cubeshader.vert", "..\\shaders\\cubeshader.frag");
-	Shader lightShader("..\\shaders\\lightshader.vert", "..\\shaders\\lightshader.frag");
+	Sphere sphere2 = Sphere();
+
+	Shader shader("\\shaders\\cubeshader.vert", "\\shaders\\cubeshader.frag");
+	Shader lightShader("\\shaders\\lightshader.vert", "\\shaders\\lightshader.frag");
+    Shader outlineShader("\\shaders\\cubeshader.vert", "\\shaders\\outlineshader.frag");
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	camera = Camera(vec3(0, 0, 4), vec3(0, 0, 0));
 	glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
 	while (!glfwWindowShouldClose(window))
 	{
 
@@ -80,10 +85,9 @@ int main() {
 		shader.setColor("lightPosition", cube.lightPosition.x, cube.lightPosition.y, cube.lightPosition.z, 1.0f);
 		shader.setColor("lightColor", cube.lightColor.x, cube.lightColor.y, cube.lightColor.z, 1.0f);
 		//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		//glBindVertexArray(VAO[0]);
-		//glDrawArrays(GL_LINES, 0, 16);	
-
+		//glDrawArrays(GL_LINES, 0, 16);
 
 		glm::mat4 model = glm::mat4(1.f);
 		model = glm::translate(model, vec3(0, 0, 0));
@@ -97,15 +101,9 @@ int main() {
 		lastFrame = timeValue;
 		//camera.setCameraSpeed(2.5f * deltaTime);
 
-
-
-
 		mat4 view = camera.getView();
 
-
 		getInput(window);
-
-
 
 		float aspectRatio = (float)width / (float)height; // width and height are the dimensions of your window
 		float nearPlane = 0.1f; // near clipping plane
@@ -116,22 +114,53 @@ int main() {
 		//projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
 		// update the uniform color
 
+        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glStencilMask(0xFF);
 		mat4 mvp = projection * view * model;
 		shader.setMatrix("MVP", (float*)&mvp);
         shader.setMatrix("model", (float*) &model);
-
 		test.drawPrimitive();
 
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+        glStencilMask(0x00);
+        glDisable(GL_DEPTH_TEST);
+        outlineShader.use();
+        outlineShader.setColor("viewPos", camera.cameraOrigin.x, camera.cameraOrigin.y, camera.cameraOrigin.z, 1.0f);
+        outlineShader.setColor("lightPosition", cube.lightPosition.x, cube.lightPosition.y, cube.lightPosition.z, 1.0f);
+        outlineShader.setColor("lightColor", cube.lightColor.x, cube.lightColor.y, cube.lightColor.z, 1.0f);
+        model = glm::scale(model, vec3(1.03, 1.03, 1.03));
+        mvp = projection * view * model;
+        glm::mat4 modelView = view * model;
+        outlineShader.setMatrix("MVP", (float*) &mvp);
+        outlineShader.setMatrix("modelView", (float*) &modelView);
+        test.drawPrimitive();
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glStencilMask(0xFF);
+        shader.use();
+        shader.setColor("viewPos", camera.cameraOrigin.x, camera.cameraOrigin.y, camera.cameraOrigin.z, 1.0f);
+        shader.setColor("lightPosition", cube.lightPosition.x, cube.lightPosition.y, cube.lightPosition.z, 1.0f);
+        shader.setColor("lightColor", cube.lightColor.x, cube.lightColor.y, cube.lightColor.z, 1.0f);
+        glEnable(GL_DEPTH_TEST);
 		float transformation = sin(timeValue) / 2.0f + 0.5f;
 		float transformationAngle = fmod(timeValue, 360.f) * glm::pi<float>() / 5.f;
 		mat4x4 transformationMatrix = glm::rotate(-transformationAngle, glm::vec3(1, 0, 0));
-        glm::mat4 modelSphere = glm::mat4(0.5);
+        auto modelSphere = glm::mat4(0.5);
         modelSphere = transformationMatrix * modelSphere;
         modelSphere = glm::translate(modelSphere, vec3(3, 2, 0));
+
 		mat4 mvpSphere = projection * view * modelSphere;
+        glm::mat4 modelViewSphere = view * modelSphere;
 		shader.setMatrix("MVP", (float*)&mvpSphere);
-        shader.setMatrix("model", (float*) &modelSphere);
+        shader.setMatrix("modelView", (float*) &modelViewSphere);
 		sphere.drawPrimitive();
+
+		modelSphere = glm::translate(modelSphere, vec3(-3, -2, 0));
+		mvpSphere = projection * view * modelSphere;
+        modelViewSphere = view* modelSphere;
+		shader.setMatrix("MVP", (float*)&mvpSphere);
+		shader.setMatrix("modelView", (float*)&modelViewSphere);
+		sphere2.drawPrimitive();
 
 		lightShader.use();
 		glm::mat4 modelArea = glm::mat4(0.5);

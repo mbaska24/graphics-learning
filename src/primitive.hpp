@@ -13,6 +13,7 @@
 #include <../glm/glm/glm.hpp>
 #include <../obj/tiny_obj_loader.h>
 #include <cstring>
+#include "../../config/config.h"
 
 
 using namespace tinyobj;
@@ -44,7 +45,7 @@ public:
 	unsigned int VBO, VAO, EBO;
 
 	char path[100];
-	const char* objectFile = "..\\assets\\";
+	const char* objectFile = "\\assets\\";
 	const char* indirect;
 	
 	//std::vector<glm::vec2> textureCoords;
@@ -59,8 +60,9 @@ public:
 	}
 
 	void loadObj() {
-		std::string error; 
-		strcpy_s(path, objectFile);
+		std::string error;
+        strcpy_s(path, workingDir);
+		strcat_s(path, objectFile);
 		strcat_s(path, indirect);
 		bool success = LoadObj(&object.attributes, &object.shapes, &object.materials, &error, path);
 		if (!success) {
