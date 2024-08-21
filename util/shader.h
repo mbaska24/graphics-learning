@@ -9,6 +9,8 @@
 #include<fstream>
 #include<sstream>
 #include<iostream>
+#include <cstring>
+#include "../../config/config.h"
 
 using namespace std;
 
@@ -16,8 +18,9 @@ class Shader
 {
 public:
 	unsigned int ID;
-
-	Shader(const char* vertexPath, const char* fragmentPath) {
+    char vertexPath[100];
+    char fragmentPath[100];
+	Shader(const char* indirect_v, const char* indirect_f) {
 		string vertexCode;
 		string fragmentCode;
 		ifstream vShaderFile;
@@ -28,6 +31,11 @@ public:
 		fShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
 	
 		try {
+            cout << workingDir << endl;
+            strcpy_s(vertexPath, workingDir);
+            strcat_s(vertexPath, indirect_v);
+            strcpy_s(fragmentPath, workingDir);
+            strcat_s(fragmentPath, indirect_f);
 			vShaderFile.open(vertexPath);
 			fShaderFile.open(fragmentPath);
 			stringstream vstream, fstream;
@@ -42,7 +50,9 @@ public:
 		}
 		catch (ifstream::failure e)
 		{
-			cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << endl;
+			//cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << endl;
+            cout << workingDir <<endl;
+            cout << vertexPath << endl;
 		}
 
 		const char* vShaderCode = vertexCode.c_str();

@@ -13,9 +13,10 @@ project ("graphics-learning")
 
 # Add source to this project's executable.
 file(GLOB UTIL_FILES "util/*.h")
+file(GLOB CONFIG_FILES "config/*.h" "config/*.hpp")
 file(GLOB SOURCE_FILES "src/*.cpp")
 file(GLOB HEADER_FILES "src/*.h" "src/*.hpp")
-add_executable (graphics-learning "src/graphics-learning.cpp" "src/graphics-learning.h" ${UTIL_FILES} ${SOURCE_FILES} ${HEADER_FILES})
+add_executable (graphics-learning "src/graphics-learning.cpp" "src/graphics-learning.h" ${UTIL_FILES} ${SOURCE_FILES} ${HEADER_FILES} ${CONFIG_FILES})
 
 add_subdirectory(include/glad)
 target_link_libraries(graphics-learning glad)

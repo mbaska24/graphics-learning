@@ -9,111 +9,121 @@
 #include<fstream>
 #include<sstream>
 #include<iostream>
+#include <cstring>
+#include "../../config/config.h"
 
 using namespace std;
 
 class Shader
 {
 public:
-	unsigned int ID;
+    unsigned int ID;
+    char vertexPath[100];
+    char fragmentPath[100];
+    Shader(const char* indirect_v, const char* indirect_f) {
+        string vertexCode;
+        string fragmentCode;
+        ifstream vShaderFile;
+        ifstream fShaderFile;
 
-	Shader(const char* vertexPath, const char* fragmentPath) {
-		string vertexCode;
-		string fragmentCode;
-		ifstream vShaderFile;
-		ifstream fShaderFile;
 
+        vShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
+        fShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
 
-		vShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
-		fShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
-	
-		try {
-			vShaderFile.open(vertexPath);
-			fShaderFile.open(fragmentPath);
-			stringstream vstream, fstream;
-			vstream << vShaderFile.rdbuf();
-			fstream << fShaderFile.rdbuf();
-			
-			vShaderFile.close();
-			fShaderFile.close();
+        try {
+            cout << workingDir << endl;
+            strcpy_s(vertexPath, workingDir);
+            strcat_s(vertexPath, indirect_v);
+            strcpy_s(fragmentPath, workingDir);
+            strcat_s(fragmentPath, indirect_f);
+            vShaderFile.open(vertexPath);
+            fShaderFile.open(fragmentPath);
+            stringstream vstream, fstream;
+            vstream << vShaderFile.rdbuf();
+            fstream << fShaderFile.rdbuf();
 
-			vertexCode = vstream.str();
-			fragmentCode = fstream.str();
-		}
-		catch (ifstream::failure e)
-		{
-			cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << endl;
-		}
+            vShaderFile.close();
+            fShaderFile.close();
 
-		const char* vShaderCode = vertexCode.c_str();
-		const char* fShaderCode = fragmentCode.c_str();
-		cout << vShaderCode << endl;
-		int success;
-		char infoLog[512];
-		unsigned int v_shader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(v_shader, 1, &vShaderCode, NULL);
-		glCompileShader(v_shader);
+            vertexCode = vstream.str();
+            fragmentCode = fstream.str();
+        }
+        catch (ifstream::failure e)
+        {
+            //cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << endl;
+            cout << workingDir <<endl;
+            cout << vertexPath << endl;
+        }
 
-		glGetShaderiv(v_shader, GL_COMPILE_STATUS, &success);
-		if (!success) {
-			glGetShaderInfoLog(v_shader, 512, NULL, infoLog);
-			cout << "VERTEX_SHADER_COMPILE: " << infoLog << "\n" << endl;
-		}
+        const char* vShaderCode = vertexCode.c_str();
+        const char* fShaderCode = fragmentCode.c_str();
+        cout << vShaderCode << endl;
+        int success;
+        char infoLog[512];
+        unsigned int v_shader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(v_shader, 1, &vShaderCode, NULL);
+        glCompileShader(v_shader);
 
-		unsigned int f_shader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(f_shader, 1, &fShaderCode, NULL);
-		glCompileShader(f_shader);
+        glGetShaderiv(v_shader, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            glGetShaderInfoLog(v_shader, 512, NULL, infoLog);
+            cout << "VERTEX_SHADER_COMPILE: " << infoLog << "\n" << endl;
+        }
 
-		glGetShaderiv(f_shader, GL_COMPILE_STATUS, &success);
-		if (!success) {
-			glGetShaderInfoLog(f_shader, 512, NULL, infoLog);
-			cout << "FRAGMENT_SHADER_COMPILE: " << infoLog << "\n" << endl;
-		}
+        unsigned int f_shader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(f_shader, 1, &fShaderCode, NULL);
+        glCompileShader(f_shader);
 
-		this->ID = glCreateProgram();
+        glGetShaderiv(f_shader, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            glGetShaderInfoLog(f_shader, 512, NULL, infoLog);
+            cout << "FRAGMENT_SHADER_COMPILE: " << infoLog << "\n" << endl;
+        }
 
-		glAttachShader(this->ID, v_shader);
-		glAttachShader(this->ID, f_shader);
+        this->ID = glCreateProgram();
 
-		glLinkProgram(this->ID);
+        glAttachShader(this->ID, v_shader);
+        glAttachShader(this->ID, f_shader);
 
-		glGetProgramiv(this->ID, GL_LINK_STATUS, &success);
+        glLinkProgram(this->ID);
 
-		if (!success) {
-			glGetProgramInfoLog(this->ID, 512, NULL, infoLog);
-		}
+        glGetProgramiv(this->ID, GL_LINK_STATUS, &success);
 
-		glDeleteShader(v_shader);
-		glDeleteShader(f_shader);
-	}
+        if (!success) {
+            glGetProgramInfoLog(this->ID, 512, NULL, infoLog);
+        }
 
-	void use() {
-		glUseProgram(this->ID);
-	}
+        glDeleteShader(v_shader);
+        glDeleteShader(f_shader);
+    }
 
-	void setBool(const string& name, bool value) const {
-		glUniform1i(glGetUniformLocation(this->ID, name.c_str()), (int)value);
-	}
+    void use() {
+        glUseProgram(this->ID);
+    }
 
-	void setFloat(const string& name, float value) const {
-		glUniform1f(glGetUniformLocation(this->ID, name.c_str()), value);
-	}
+    void setBool(const string& name, bool value) const {
+        glUniform1i(glGetUniformLocation(this->ID, name.c_str()), (int)value);
+    }
 
-	void setInt(const string& name, int value) const {
-		glUniform1i(glGetUniformLocation(this->ID, name.c_str()), value);
-	}
+    void setFloat(const string& name, float value) const {
+        glUniform1f(glGetUniformLocation(this->ID, name.c_str()), value);
+    }
 
-	void setColor(const string& name, float r, float g, float b, float a) {
-		glUniform4f(glGetUniformLocation(this->ID, name.c_str()), r, g, b, a);
-	}
+    void setInt(const string& name, int value) const {
+        glUniform1i(glGetUniformLocation(this->ID, name.c_str()), value);
+    }
 
-	void setMatrix(const string& name, float* matrix) {
-		glUniformMatrix4fv(glGetUniformLocation(this->ID, name.c_str()), 1, false, matrix);
-	}
+    void setColor(const string& name, float r, float g, float b, float a) {
+        glUniform4f(glGetUniformLocation(this->ID, name.c_str()), r, g, b, a);
+    }
 
-	void kill() {
-		glDeleteProgram(this->ID);
-	}
+    void setMatrix(const string& name, float* matrix) {
+        glUniformMatrix4fv(glGetUniformLocation(this->ID, name.c_str()), 1, false, matrix);
+    }
+
+    void kill() {
+        glDeleteProgram(this->ID);
+    }
 
 };
 
